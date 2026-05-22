@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.set('view engine', 'ejs');
+app.set('trust proxy', 1); 
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -23,7 +24,9 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 1000 * 60 * 60 * 24 * 14 // 14 days (2 weeks)
+    maxAge: 1000 * 60 * 60 * 24 * 14, // 14 days (2 weeks)
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }))
 
